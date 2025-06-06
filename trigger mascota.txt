@@ -1,0 +1,21 @@
+CREATE TRIGGER `before_mascota_update` BEFORE UPDATE ON `mascota`
+ FOR EACH ROW BEGIN
+    
+    IF @is_updating IS NULL THEN
+        SET @is_updating = 1;
+        
+        
+        IF OLD.Nombre_Mascota <> NEW.Nombre_Mascota OR 
+           OLD.Fecha_Mascota <> NEW.Fecha_Mascota OR 
+           OLD.Estado_Mascota <> NEW.Estado_Mascota OR 
+           OLD.Id_Usuario <> NEW.Id_Usuario THEN
+            
+            INSERT INTO mascota_historial(Id_Mascota, Id_Publicacion, Id_Usuario, Nombre_Mascota, Fecha_Mascota, Estado_Mascota)
+            VALUES (OLD.Id_Mascota, OLD.Id_Publicacion, OLD.Id_Usuario,
+                    OLD.Nombre_Mascota, OLD.Fecha_Mascota, OLD.Estado_Mascota);
+        END IF;
+        
+        
+        SET @is_updating = NULL;
+    END IF;
+END

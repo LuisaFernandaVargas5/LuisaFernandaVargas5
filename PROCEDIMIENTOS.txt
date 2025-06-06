@@ -1,0 +1,159 @@
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_mascota`(
+    IN p_Id_Mascota INT,
+    IN p_Id_Publicacion INT,
+    IN p_Id_Usuario INT,
+    IN p_Nombre_Mascota VARCHAR(100),
+    IN p_Fecha_Mascota DATE,
+    IN p_Estado_Mascota INT
+)
+BEGIN
+    UPDATE mascota
+    SET Id_Publicacion = p_Id_Publicacion,
+        Id_Usuario = p_Id_Usuario,
+        Nombre_Mascota = p_Nombre_Mascota,
+        Fecha_Mascota = p_Fecha_Mascota,
+        Estado_Mascota = p_Estado_Mascota
+    WHERE Id_Mascota = p_Id_Mascota;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_publicacion`(
+    IN p_Id_Publicacion INT,
+    IN p_Id_Usuario INT,
+    IN p_NombreUser_Publicacion VARCHAR(100),
+    IN p_Nombre_Publicacion VARCHAR(100),
+    IN p_Fecha_Publicacion DATE
+)
+BEGIN
+    UPDATE publicacion
+    SET Id_Usuario = p_Id_Usuario,
+        NombreUser_Publicacion = p_NombreUser_Publicacion,
+        Nombre_Publicacion = p_Nombre_Publicacion,
+        Fecha_Publicacion = p_Fecha_Publicacion
+    WHERE Id_Publicacion = p_Id_Publicacion;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_rol`(
+    IN p_Id_Rol INT,
+    IN p_Nombre_Rol VARCHAR(100),
+    IN p_Descripcion_Rol VARCHAR(225)
+)
+BEGIN
+    UPDATE rol
+    SET Nombre_Rol = p_Nombre_Rol,
+        Descripcion_Rol = p_Descripcion_Rol
+    WHERE Id_Rol = p_Id_Rol;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `actualizar_usuario`(IN `p_Id_usuario` INT, IN `p_nombre_usuario` VARCHAR(100), IN `p_apellido_usuario` VARCHAR(100), IN `p_estado_usuario` VARCHAR(100), IN `p_user_usuario` VARCHAR(100), IN `p_contrasena_usuario` VARCHAR(225), IN `p_Id_Rol` INT)
+BEGIN
+    UPDATE usuario
+    SET nombre_usuario = p_nombre_usuario,
+        apellido_usuario = p_apellido_usuario,
+        estado_usuario = p_estado_usuario,
+        user_usuario = p_user_usuario,
+        correo_usuario = P_correo_usuario,
+        contraseña_usuario = p_contrasena_usuario,
+        Id_Rol = p_Id_Rol
+    WHERE Id_usuario = p_Id_usuario;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminar_mascota`(
+    IN p_Id_Mascota INT
+)
+BEGIN
+    DELETE FROM mascota WHERE Id_Mascota = p_Id_Mascota;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminar_publicacion`(
+    IN p_Id_Publicacion INT
+)
+BEGIN
+    DELETE FROM publicacion WHERE Id_Publicacion = p_Id_Publicacion;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminar_rol`(
+    IN p_Id_Rol INT
+)
+BEGIN
+    DELETE FROM rol WHERE Id_Rol = p_Id_Rol;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `eliminar_usuario`(
+    IN p_Id_usuario INT
+)
+BEGIN
+    DELETE FROM usuario WHERE Id_usuario = p_Id_usuario;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertar_mascota`(
+    IN p_Id_Publicacion INT,
+    IN p_Id_Usuario INT,
+    IN p_Nombre_Mascota VARCHAR(100),
+    IN p_Fecha_Mascota DATE,
+    IN p_Estado_Mascota INT
+)
+BEGIN
+    INSERT INTO mascota (
+        Id_Publicacion, Id_Usuario, Nombre_Mascota, Fecha_Mascota, Estado_Mascota
+    ) VALUES (
+        p_Id_Publicacion, p_Id_Usuario, p_Nombre_Mascota, p_Fecha_Mascota, p_Estado_Mascota
+    );
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertar_publicacion`(
+    IN p_Id_Usuario INT,
+    IN p_NombreUser_Publicacion VARCHAR(100),
+    IN p_Nombre_Publicacion VARCHAR(100),
+    IN p_Fecha_Publicacion DATE
+)
+BEGIN
+    INSERT INTO publicacion (
+        Id_Usuario, NombreUser_Publicacion, Nombre_Publicacion, Fecha_Publicacion
+    ) VALUES (
+        p_Id_Usuario, p_NombreUser_Publicacion, p_Nombre_Publicacion, p_Fecha_Publicacion
+    );
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertar_rol`(
+    IN p_Nombre_Rol VARCHAR(100),
+    IN p_Descripcion_Rol VARCHAR(225)
+)
+BEGIN
+    INSERT INTO rol (Nombre_Rol, Descripcion_Rol)
+    VALUES (p_Nombre_Rol, p_Descripcion_Rol);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertar_usuario`(IN `p_nombre_usuario` VARCHAR(100), IN `p_apellido_usuario` VARCHAR(100), IN `p_estado_usuario` VARCHAR(100), IN `p_user_usuario` VARCHAR(100), IN `p_ correo_usuario` VARCHAR(100), IN `p_contrasena_usuario` VARCHAR(225), IN `p_Id_Rol` INT)
+BEGIN
+    INSERT INTO usuario (
+        nombre_usuario, apellido_usuario, estado_usuario, correo_usuario,
+        user_usuario, contraseña_usuario, Id_Rol
+    ) VALUES (
+        p_nombre_usuario, p_apellido_usuario, p_estado_usuario,
+        p_user_usuario, p_correo_usuario, p_contrasena_usuario, p_Id_Rol
+    );
+END$$
+DELIMITER ;

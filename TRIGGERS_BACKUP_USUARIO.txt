@@ -1,0 +1,50 @@
+CREATE TRIGGER `trg_auditar_contrasena_usuario` AFTER UPDATE ON `usuario`
+ FOR EACH ROW BEGIN
+    IF OLD.contraseña_usuario != NEW.contraseña_usuario THEN
+        INSERT INTO backup_usuario
+        (Id_usuario, nombre_usuario, apellido_usuario, estado_usuario, user_usuario, contraseña_usuario, Id_Rol, accion, fecha_evento)
+        VALUES
+        (NEW.Id_usuario, NEW.nombre_usuario, NEW.apellido_usuario, NEW.estado_usuario, NEW.user_usuario, NEW.contraseña_usuario, NEW.Id_Rol, 'PASS_CHANGE', NOW());
+    END IF;
+END
+
+CREATE TRIGGER `trg_backup_usuario_delete` BEFORE UPDATE ON `usuario`
+ FOR EACH ROW BEGIN
+	INSERT INTO backup_usuario
+    (`Id_usuario`,`nombre_usuario`,`apellido_usuario`,`estado_usuario`,`user_usuario`,`contraseña_usuario`,`Id_rol`,`accion`,`fecha_evento`)
+    VALUES
+    (NEW.Id_usuario,NEW.nombre_usuario,NEW.apellido_usuario,NEW.estado_usuario,NEW.user_usuario,NEW.contraseña_usuario,NEW.Id_rol, 'DELETE', NOW());
+END
+
+CREATE TRIGGER `trg_backup_usuario_insert` AFTER INSERT ON `usuario`
+ FOR EACH ROW BEGIN
+	INSERT INTO backup_usuario
+    (`Id_usuario`,`nombre_usuario`,`apellido_usuario`,`estado_usuario`,`user_usuario`,`contraseña_usuario`,`Id_rol`,`accion`,`fecha_evento`)
+    VALUES
+    (NEW.Id_usuario,NEW.nombre_usuario,NEW.apellido_usuario,NEW.estado_usuario,NEW.user_usuario,NEW.contraseña_usuario,NEW.Id_rol, 'INSERT', NOW());
+END
+
+CREATE TRIGGER `trg_backup_usuario_update` AFTER UPDATE ON `usuario`
+ FOR EACH ROW BEGIN
+	INSERT INTO backup_usuario
+    (`Id_usuario`,`nombre_usuario`,`apellido_usuario`,`estado_usuario`,`user_usuario`,`contraseña_usuario`,`Id_rol`,`accion`,`fecha_evento`)
+    VALUES
+    (NEW.Id_usuario,NEW.nombre_usuario,NEW.apellido_usuario,NEW.estado_usuario,NEW.user_usuario,NEW.contraseña_usuario,NEW.Id_rol, 'UPDATE', NOW());
+END
+
+CREATE TRIGGER `trg_estado_usuario_default` BEFORE INSERT ON `usuario`
+ FOR EACH ROW BEGIN
+	IF NEW.estado_usuario IS NULL OR NEW.estado_usuario = '' THEN
+    	SET NEW.estado_usuario = 'Activo';
+    END IF;
+END
+
+CREATE TRIGGER `trg_validar_usuario_unico` BEFORE INSERT ON `usuario`
+ FOR EACH ROW BEGIN
+	IF EXISTS (
+        SELECT 1 FROM usuario WHERE user_usuario = NEW.user_usuario
+    ) THEN
+    	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El nombre de usuario ya existe';
+	END IF;
+END
